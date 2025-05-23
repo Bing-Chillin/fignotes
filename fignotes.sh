@@ -56,13 +56,25 @@ case "$1" in
             echo "No reminders to show."
             exit 0
         fi
-        echo -e "\033[1;33m"
+        echo -e "\033[1;37m"   # White color
         while IFS= read -r line; do
             figlet "$line"
         done < "$REMINDER_FILE"
         echo -e "\033[0m"
         ;;
-    *)
-        usage
+    --watch|-w)
+        if [ ! -f "$REMINDER_FILE" ] || [ ! -s "$REMINDER_FILE" ]; then
+            echo "No reminders to show."
+            exit 0
+        fi
+        while true; do
+            clear
+            echo -e "\033[1;37m"
+            while IFS= read -r line; do
+                figlet "$line"
+            done < "$REMINDER_FILE"
+            echo -e "\033[0m"
+            sleep 2
+        done
         ;;
 esac
